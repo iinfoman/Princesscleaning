@@ -655,6 +655,37 @@
     #promoBanner{display:none;background:linear-gradient(135deg,var(--pink),var(--pink-deep));padding:0.7rem 1.5rem;text-align:center;position:relative}
     #promoBanner p{color:white;font-size:0.85rem;font-weight:600;padding-right:2rem}
     #promoBanner button{position:absolute;right:1rem;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.8);font-size:1rem;cursor:pointer}
+    /* overview / clients / verify / team / settings */
+    .ov-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;margin-bottom:1.25rem}
+    .ov-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:1rem;text-align:center}
+    .ov-card .on{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--pink-light);display:block}
+    .ov-card .ol{font-size:0.68rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.05em}
+    .client-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:1rem 1.25rem;margin-bottom:0.75rem}
+    .client-card h4{color:white;font-size:0.95rem;margin-bottom:0.2rem}
+    .client-card .cmeta{color:rgba(255,255,255,0.5);font-size:0.78rem;margin-bottom:0.5rem}
+    .client-tags{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem}
+    .client-tag{font-size:0.65rem;font-weight:700;padding:0.2rem 0.6rem;border-radius:100px;background:rgba(232,88,138,0.15);color:var(--pink-light)}
+    .client-note{width:100%;padding:0.6rem 0.8rem;border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;background:rgba(255,255,255,0.06);color:white;font-family:'Nunito',sans-serif;font-size:0.82rem;outline:none;resize:vertical;min-height:50px}
+    .verify-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:0.9rem 1.1rem;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap}
+    .verify-code{font-family:'Courier New',monospace;font-size:1.1rem;font-weight:700;letter-spacing:0.1em;color:var(--gold);background:rgba(245,208,96,0.1);padding:0.3rem 0.8rem;border-radius:8px}
+    .verify-status{font-size:0.65rem;font-weight:700;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:100px}
+    .verify-status.unused{background:rgba(76,175,80,0.2);color:#81c784}
+    .verify-status.used{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.4)}
+    .team-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:1rem 1.25rem;margin-bottom:0.75rem}
+    .team-card h4{color:white;font-size:0.95rem;margin-bottom:0.3rem}
+    .team-card .tmeta{color:rgba(255,255,255,0.45);font-size:0.75rem;margin-bottom:0.6rem}
+    .perm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:0.4rem;margin-bottom:0.75rem}
+    .perm-chip{display:flex;align-items:center;gap:0.4rem;font-size:0.75rem;color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.05);padding:0.4rem 0.6rem;border-radius:8px;cursor:pointer}
+    .settings-row{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:0.85rem 1.1rem;margin-bottom:0.6rem}
+    .settings-row .srl{font-size:0.85rem;color:white;font-weight:600}
+    .settings-row .srd{font-size:0.72rem;color:rgba(255,255,255,0.45)}
+    .switch{position:relative;width:44px;height:24px;flex-shrink:0}
+    .switch input{opacity:0;width:0;height:0}
+    .switch .slider{position:absolute;inset:0;background:rgba(255,255,255,0.2);border-radius:24px;cursor:pointer;transition:0.2s}
+    .switch .slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:white;border-radius:50%;transition:0.2s}
+    .switch input:checked+.slider{background:var(--pink)}
+    .switch input:checked+.slider:before{transform:translateX(20px)}
+    .owner-badge-user{font-size:0.72rem;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);padding:0.3rem 0.75rem;border-radius:100px;display:inline-block;margin-bottom:1rem}
 </style>
 </head>
 <body>
@@ -731,23 +762,33 @@
     </div>
     <div class="owner-stats" id="ownerStats"></div>
     <div class="owner-tabs">
-      <button class="owner-tab active" onclick="switchTab('upcoming')">📅 Bookings</button>
+      <button class="owner-tab active" onclick="switchTab('overview')">🏠 Overview</button>
+      <button class="owner-tab" onclick="switchTab('upcoming')">📅 Bookings</button>
       <button class="owner-tab" onclick="switchTab('calendar')">🗓 Calendar</button>
       <button class="owner-tab" onclick="switchTab('reminders')">🔔 Reminders</button>
+      <button class="owner-tab" onclick="switchTab('clients')">👥 Clients</button>
       <button class="owner-tab" onclick="switchTab('promo')">📢 Promo</button>
       <button class="owner-tab" onclick="switchTab('gallery')">📸 Gallery</button>
       <button class="owner-tab" onclick="switchTab('edit')">✏️ Edit Site</button>
       <button class="owner-tab" onclick="switchTab('invoice')">💰 Invoice</button>
+      <button class="owner-tab" onclick="switchTab('verify')">🔐 Verification</button>
+      <button class="owner-tab" onclick="switchTab('team')">🧑‍🤝‍🧑 Team</button>
+      <button class="owner-tab" onclick="switchTab('settings')">⚙️ Settings</button>
       <button class="owner-tab" onclick="switchTab('links')">🔗 Links</button>
     </div>
-    <div class="owner-panel active" id="panel-upcoming"></div>
+    <div class="owner-panel active" id="panel-overview"></div>
+    <div class="owner-panel" id="panel-upcoming"></div>
     <div class="owner-panel" id="panel-all"></div>
     <div class="owner-panel" id="panel-calendar"></div>
     <div class="owner-panel" id="panel-reminders"></div>
+    <div class="owner-panel" id="panel-clients"></div>
     <div class="owner-panel" id="panel-promo"></div>
     <div class="owner-panel" id="panel-gallery"></div>
     <div class="owner-panel" id="panel-edit"></div>
     <div class="owner-panel" id="panel-invoice"></div>
+    <div class="owner-panel" id="panel-verify"></div>
+    <div class="owner-panel" id="panel-team"></div>
+    <div class="owner-panel" id="panel-settings"></div>
     <div class="owner-panel" id="panel-links">
       <div class="quick-grid">
         <a href="mailto:princesshousekeeping@yahoo.com" class="quick-card"><div class="qi">📧</div><h4>Email</h4><p>Check booking emails</p></a>
@@ -857,7 +898,7 @@
 
 <!-- STATS -->
 <div class="stats-bar">
-  <div class="stat-item reveal"><span class="stat-num">500+</span><span class="stat-label">Cleans completed</span></div>
+  <div class="stat-item reveal"><span class="stat-num">350+</span><span class="stat-label">Cleans completed</span></div>
   <div class="stat-item reveal reveal-delay-1"><span class="stat-num">2+</span><span class="stat-label">Years serving you</span></div>
   <div class="stat-item reveal reveal-delay-2"><span class="stat-num">100%</span><span class="stat-label">Satisfaction guarantee</span></div>
   <div class="stat-item reveal reveal-delay-3"><span class="stat-num">2</span><span class="stat-label">Cities covered</span></div>
@@ -1309,18 +1350,34 @@ function openOwner(){
   setTimeout(()=>document.getElementById('pwInput').focus(),100);
 }
 
+let currentOwnerUser = null; // null = primary owner (full access), otherwise team member object
+
 function checkPassword(){
   const input = document.getElementById('pwInput').value;
   const stored = localStorage.getItem('ph_owner_pw') || DEFAULT_PASSWORD;
   pwAttempts++;
 
+  const team = JSON.parse(localStorage.getItem('ph_team')||'[]');
+  const teamMatch = team.find(m=>m.password===input && m.active!==false);
+
   if(input === stored){
     // Correct - close pw modal, open dashboard
+    currentOwnerUser = null;
     document.getElementById('pwOverlay').classList.remove('open');
     document.getElementById('ownerModal').classList.add('open');
     document.getElementById('pwChangeSection').style.display='block';
     pwAttempts = 0;
     renderOwner();
+    applyTeamPermissions();
+  } else if(teamMatch){
+    // Team member login - restricted by permissions
+    currentOwnerUser = teamMatch;
+    document.getElementById('pwOverlay').classList.remove('open');
+    document.getElementById('ownerModal').classList.add('open');
+    document.getElementById('pwChangeSection').style.display='none';
+    pwAttempts = 0;
+    renderOwner();
+    applyTeamPermissions();
   } else {
     document.getElementById('pwError').classList.add('show');
     const remaining = MAX_ATTEMPTS - pwAttempts;
@@ -1361,14 +1418,19 @@ function closeOwner(){document.getElementById('ownerModal').classList.remove('op
 
 function renderOwner(){
   renderOwnerStats();
+  renderOverviewPanel();
   renderBookingPanel('panel-upcoming',BOOKINGS.filter(b=>b.status!=='cancelled').sort((a,b)=>a.created>b.created?1:-1).slice(0,10));
   renderBookingPanel('panel-all',BOOKINGS);
   renderOwnerCal();
   renderReminders();
+  renderClientsPanel();
   renderPromoPanel();
   renderGalleryPanel();
   renderEditPanel();
   renderInvoicePanel();
+  renderVerifyPanel();
+  renderTeamPanel();
+  renderSettingsPanel();
 }
 
 function renderOwnerStats(){
@@ -1453,6 +1515,301 @@ function switchTab(tab){
   event.target.classList.add('active');
   document.getElementById('panel-'+tab).classList.add('active');
 }
+
+// ══════════════════════════════════════════
+// ── OVERVIEW PANEL
+// ══════════════════════════════════════════
+function renderOverviewPanel(){
+  const p=document.getElementById('panel-overview');
+  const total=BOOKINGS.length;
+  const pending=BOOKINGS.filter(b=>b.status==='pending').length;
+  const confirmed=BOOKINGS.filter(b=>b.status==='confirmed').length;
+  const clients=new Set(BOOKINGS.map(b=>b.phone)).size;
+  const photos=GALLERY.length;
+  const codes=JSON.parse(localStorage.getItem('ph_verify_codes')||'[]').filter(c=>!c.used).length;
+  const team=JSON.parse(localStorage.getItem('ph_team')||'[]').filter(m=>m.active!==false).length;
+  const recent=BOOKINGS.slice().sort((a,b)=>b.created>a.created?1:-1).slice(0,5);
+  const userLabel = currentOwnerUser ? `👤 Logged in as <strong>${currentOwnerUser.name}</strong> (team member)` : `👑 Logged in as <strong>Owner</strong> (full access)`;
+  p.innerHTML=`
+    <p class="owner-badge-user">${userLabel}</p>
+    <div class="ov-grid">
+      <div class="ov-card"><span class="on">${total}</span><span class="ol">Bookings</span></div>
+      <div class="ov-card"><span class="on" style="color:var(--gold)">${pending}</span><span class="ol">Pending</span></div>
+      <div class="ov-card"><span class="on" style="color:#81c784">${confirmed}</span><span class="ol">Confirmed</span></div>
+      <div class="ov-card"><span class="on">${clients}</span><span class="ol">Clients</span></div>
+      <div class="ov-card"><span class="on">${photos}</span><span class="ol">Gallery photos</span></div>
+      <div class="ov-card"><span class="on">${codes}</span><span class="ol">Active codes</span></div>
+      <div class="ov-card"><span class="on">${team}</span><span class="ol">Team members</span></div>
+    </div>
+    <div class="cms-card">
+      <h4>📋 Recent activity</h4>
+      <p>The last 5 bookings submitted through the site.</p>
+    </div>
+    ${recent.length?recent.map(b=>`<div class="booking-item ${b.status}" style="margin-bottom:0.6rem"><span class="booking-badge ${b.status}">${b.status}</span><div class="booking-info"><strong>${b.name}</strong><span>${b.service} · ${b.city} · ${b.date} at ${b.time}</span></div></div>`).join(''):'<div class="empty-state">👑 No activity yet.</div>'}
+  `;
+}
+
+// ══════════════════════════════════════════
+// ── CLIENTS (CRM) PANEL
+// ══════════════════════════════════════════
+function renderClientsPanel(){
+  const p=document.getElementById('panel-clients');
+  const notes=JSON.parse(localStorage.getItem('ph_client_notes')||'{}');
+  const map={};
+  BOOKINGS.forEach(b=>{
+    const key=b.phone||b.name;
+    if(!map[key])map[key]={name:b.name,phone:b.phone,email:b.email,city:b.city,bookings:[]};
+    map[key].bookings.push(b);
+  });
+  const clients=Object.values(map).sort((a,b)=>b.bookings.length-a.bookings.length);
+  if(!clients.length){p.innerHTML="<div class=\"empty-state\">👥 No clients yet. They'll appear here once bookings come in.</div>";return}
+  p.innerHTML=`
+    <div class="cms-card">
+      <h4>👥 Client Directory (CRM)</h4>
+      <p>Auto-built from your bookings. Add private notes for each client — only you can see these.</p>
+    </div>
+    ${clients.map(c=>{
+      const key=c.phone||c.name;
+      const noteVal=notes[key]||'';
+      const confirmedCount=c.bookings.filter(b=>b.status==='confirmed').length;
+      return `<div class="client-card">
+        <h4>${c.name}</h4>
+        <div class="cmeta">📞 ${c.phone||'—'} ${c.email?' · ✉️ '+c.email:''} ${c.city?' · 🏙️ '+c.city:''}</div>
+        <div class="client-tags">
+          <span class="client-tag">${c.bookings.length} booking${c.bookings.length>1?'s':''}</span>
+          <span class="client-tag">${confirmedCount} confirmed</span>
+        </div>
+        <textarea class="client-note" id="note-${key.replace(/[^a-zA-Z0-9]/g,'')}" placeholder="Private note (e.g. has a dog, prefers mornings)...">${noteVal}</textarea>
+        <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
+          <button class="cms-btn" style="padding:0.4rem 1rem;font-size:0.75rem" onclick="saveClientNote('${key.replace(/'/g,"\\\\'")}','${key.replace(/[^a-zA-Z0-9]/g,'')}')">💾 Save note</button>
+          ${c.phone?`<button class="bk-btn bk-wa" onclick="waClient('${c.phone}','${c.name}','their next clean','')">💬 WhatsApp</button>`:''}
+        </div>
+      </div>`;
+    }).join('')}
+  `;
+}
+
+function saveClientNote(key,domId){
+  const notes=JSON.parse(localStorage.getItem('ph_client_notes')||'{}');
+  notes[key]=document.getElementById('note-'+domId).value;
+  localStorage.setItem('ph_client_notes',JSON.stringify(notes));
+}
+
+// ══════════════════════════════════════════
+// ── VERIFICATION CODES PANEL
+// ══════════════════════════════════════════
+function renderVerifyPanel(){
+  const p=document.getElementById('panel-verify');
+  const codes=JSON.parse(localStorage.getItem('ph_verify_codes')||'[]');
+  p.innerHTML=`
+    <div class="cms-card">
+      <h4>🔐 Verification Codes</h4>
+      <p>Generate one-time codes to verify staff check-ins or confirm a client's identity on arrival. Codes are stored locally on this device.</p>
+    </div>
+    <div class="cms-section">
+      <span class="cms-label">Label (optional)</span>
+      <input class="cms-input" id="verifyLabel" placeholder="e.g. Thandi — Tuesday clean"/>
+    </div>
+    <button class="cms-btn" onclick="generateVerifyCode()">➕ Generate New Code</button>
+    <p class="cms-save-msg" id="verifyMsg"></p>
+    <div style="margin-top:1.25rem">
+      ${codes.length?codes.slice().reverse().map(c=>`
+        <div class="verify-card">
+          <span class="verify-code">${c.code}</span>
+          <span style="font-size:0.8rem;color:rgba(255,255,255,0.6)">${c.label||'No label'}</span>
+          <span class="verify-status ${c.used?'used':'unused'}">${c.used?'Used':'Active'}</span>
+          <span style="font-size:0.7rem;color:rgba(255,255,255,0.35)">${new Date(c.created).toLocaleDateString('en-ZA')}</span>
+          <div style="display:flex;gap:0.4rem;margin-left:auto">
+            ${!c.used?`<button class="bk-btn bk-confirm" onclick="markVerifyUsed('${c.code}')">✓ Mark used</button>`:''}
+            <button class="bk-btn bk-cancel" onclick="revokeVerifyCode('${c.code}')">🗑 Delete</button>
+          </div>
+        </div>`).join(''):'<div class="empty-state">🔐 No codes generated yet.</div>'}
+    </div>
+  `;
+}
+
+function generateVerifyCode(){
+  const codes=JSON.parse(localStorage.getItem('ph_verify_codes')||'[]');
+  const label=document.getElementById('verifyLabel').value.trim();
+  const code=Math.random().toString(36).substring(2,8).toUpperCase();
+  codes.push({code,label,used:false,created:new Date().toISOString()});
+  localStorage.setItem('ph_verify_codes',JSON.stringify(codes));
+  document.getElementById('verifyMsg').style.color='#81c784';
+  document.getElementById('verifyMsg').textContent=`✅ Code ${code} generated!`;
+  setTimeout(()=>renderVerifyPanel(),400);
+}
+
+function markVerifyUsed(code){
+  const codes=JSON.parse(localStorage.getItem('ph_verify_codes')||'[]');
+  const c=codes.find(c=>c.code===code);
+  if(c){c.used=true;localStorage.setItem('ph_verify_codes',JSON.stringify(codes));renderVerifyPanel()}
+}
+
+function revokeVerifyCode(code){
+  if(!confirm('Delete this verification code?'))return;
+  let codes=JSON.parse(localStorage.getItem('ph_verify_codes')||'[]');
+  codes=codes.filter(c=>c.code!==code);
+  localStorage.setItem('ph_verify_codes',JSON.stringify(codes));
+  renderVerifyPanel();
+}
+
+// ══════════════════════════════════════════
+// ── MANAGE TEAM PANEL (multi-admin with permissions)
+// ══════════════════════════════════════════
+const TEAM_PERMS=[
+  {key:'upcoming',label:'📅 Bookings'},
+  {key:'calendar',label:'🗓 Calendar'},
+  {key:'reminders',label:'🔔 Reminders'},
+  {key:'clients',label:'👥 Clients'},
+  {key:'promo',label:'📢 Promo'},
+  {key:'gallery',label:'📸 Gallery'},
+  {key:'edit',label:'✏️ Edit Site'},
+  {key:'invoice',label:'💰 Invoice'},
+  {key:'verify',label:'🔐 Verification'}
+];
+
+function renderTeamPanel(){
+  const p=document.getElementById('panel-team');
+  if(currentOwnerUser){p.innerHTML='<div class="empty-state">🔒 Only the primary owner can manage team members.</div>';return}
+  const team=JSON.parse(localStorage.getItem('ph_team')||'[]');
+  p.innerHTML=`
+    <div class="cms-card">
+      <h4>🧑‍🤝‍🧑 Manage Team</h4>
+      <p>Add staff or co-admins with their own password and restricted dashboard access.</p>
+    </div>
+    <div class="cms-grid-2">
+      <div><span class="cms-label">Name</span><input class="cms-input" id="teamName" placeholder="e.g. Thandi M."/></div>
+      <div><span class="cms-label">Password</span><input class="cms-input" id="teamPw" placeholder="At least 6 characters"/></div>
+    </div>
+    <div class="cms-section" style="margin-top:1rem">
+      <span class="cms-label">Permissions (which tabs they can see)</span>
+      <div class="perm-grid">
+        ${TEAM_PERMS.map(perm=>`<label class="perm-chip"><input type="checkbox" class="team-perm-new" value="${perm.key}"/> ${perm.label}</label>`).join('')}
+      </div>
+    </div>
+    <button class="cms-btn" onclick="addTeamMember()">➕ Add Team Member</button>
+    <p class="cms-save-msg" id="teamMsg"></p>
+    <div style="margin-top:1.25rem">
+      ${team.length?team.map((m,i)=>`
+        <div class="team-card">
+          <h4>${m.name} ${m.active===false?'<span style="color:#ef9a9a;font-size:0.7rem">(disabled)</span>':''}</h4>
+          <div class="tmeta">Permissions: ${m.permissions&&m.permissions.length?m.permissions.map(k=>(TEAM_PERMS.find(t=>t.key===k)||{}).label||k).join(', '):'None'}</div>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+            <button class="cms-btn-ghost" style="padding:0.4rem 1rem;font-size:0.75rem" onclick="toggleTeamMember(${i})">${m.active===false?'✅ Enable':'⏸ Disable'}</button>
+            <button class="bk-btn bk-cancel" onclick="removeTeamMember(${i})">🗑 Remove</button>
+          </div>
+        </div>`).join(''):'<div class="empty-state">🧑‍🤝‍🧑 No team members added yet.</div>'}
+    </div>
+  `;
+}
+
+function addTeamMember(){
+  const name=document.getElementById('teamName').value.trim();
+  const pw=document.getElementById('teamPw').value.trim();
+  const perms=Array.from(document.querySelectorAll('.team-perm-new:checked')).map(c=>c.value);
+  const msg=document.getElementById('teamMsg');
+  if(!name){msg.style.color='#e53935';msg.textContent='❌ Please enter a name';return}
+  if(pw.length<6){msg.style.color='#e53935';msg.textContent='❌ Password must be at least 6 characters';return}
+  const team=JSON.parse(localStorage.getItem('ph_team')||'[]');
+  team.push({name,password:pw,permissions:perms,active:true,created:new Date().toISOString()});
+  localStorage.setItem('ph_team',JSON.stringify(team));
+  msg.style.color='#81c784';
+  msg.textContent=`✅ ${name} added to the team!`;
+  setTimeout(()=>renderTeamPanel(),500);
+}
+
+function toggleTeamMember(i){
+  const team=JSON.parse(localStorage.getItem('ph_team')||'[]');
+  if(team[i]){team[i].active=team[i].active===false?true:false;localStorage.setItem('ph_team',JSON.stringify(team));renderTeamPanel()}
+}
+
+function removeTeamMember(i){
+  if(!confirm('Remove this team member? They will no longer be able to log in.'))return;
+  const team=JSON.parse(localStorage.getItem('ph_team')||'[]');
+  team.splice(i,1);
+  localStorage.setItem('ph_team',JSON.stringify(team));
+  renderTeamPanel();
+}
+
+// Hide/restrict tabs based on logged-in team member's permissions
+function applyTeamPermissions(){
+  const allTabs=['overview','upcoming','calendar','reminders','clients','promo','gallery','edit','invoice','verify','team','settings','links'];
+  document.querySelectorAll('.owner-tab').forEach(btn=>btn.style.display='');
+  if(!currentOwnerUser)return; // owner sees everything
+  const allowed=new Set(['overview',...(currentOwnerUser.permissions||[])]);
+  document.querySelectorAll('.owner-tab').forEach(btn=>{
+    const onclick=btn.getAttribute('onclick')||'';
+    const match=onclick.match(/switchTab\('([a-z]+)'\)/);
+    const tab=match?match[1]:'';
+    if(['team','settings','links'].includes(tab) || (tab && !allowed.has(tab))){
+      btn.style.display='none';
+    }
+  });
+}
+
+// ══════════════════════════════════════════
+// ── SETTINGS PANEL
+// ══════════════════════════════════════════
+function renderSettingsPanel(){
+  const p=document.getElementById('panel-settings');
+  if(currentOwnerUser){p.innerHTML='<div class="empty-state">🔒 Only the primary owner can access Settings.</div>';return}
+  const settings=JSON.parse(localStorage.getItem('ph_settings')||'{"notifyWhatsapp":true,"notifyEmail":false,"autoOpenWhatsapp":true}');
+  p.innerHTML=`
+    <div class="cms-card">
+      <h4>⚙️ Dashboard Settings</h4>
+      <p>Control notifications, security and data for your owner dashboard.</p>
+    </div>
+    <div class="settings-row">
+      <div><div class="srl">WhatsApp notifications</div><div class="srd">Open WhatsApp automatically for new bookings</div></div>
+      <label class="switch"><input type="checkbox" id="set-wa" ${settings.autoOpenWhatsapp?'checked':''} onchange="saveSettings()"/><span class="slider"></span></label>
+    </div>
+    <div class="settings-row">
+      <div><div class="srl">Email reminders</div><div class="srd">Flag bookings that need an email follow-up</div></div>
+      <label class="switch"><input type="checkbox" id="set-email" ${settings.notifyEmail?'checked':''} onchange="saveSettings()"/><span class="slider"></span></label>
+    </div>
+    <div class="cms-card" style="margin-top:1.25rem">
+      <h4>🔑 Owner Password</h4>
+      <p>Change the master password used to access this dashboard.</p>
+    </div>
+    <div class="cms-grid-2">
+      <input class="cms-input" type="password" id="settingsPwNew" placeholder="New password (6+ characters)"/>
+      <button class="cms-btn" onclick="changePassword()">Save Password</button>
+    </div>
+    <div class="cms-card" style="margin-top:1.25rem">
+      <h4>🗑️ Data Management</h4>
+      <p>Clear locally stored data for this dashboard. This cannot be undone.</p>
+    </div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+      <button class="cms-btn-ghost" onclick="clearAllBookings()">Clear all bookings</button>
+      <button class="cms-btn-ghost" onclick="clearAllDashboardData()">Reset entire dashboard</button>
+    </div>
+    <p class="cms-save-msg" id="settingsMsg"></p>
+  `;
+}
+
+function saveSettings(){
+  const settings={
+    autoOpenWhatsapp:document.getElementById('set-wa').checked,
+    notifyEmail:document.getElementById('set-email').checked
+  };
+  localStorage.setItem('ph_settings',JSON.stringify(settings));
+  const msg=document.getElementById('settingsMsg');
+  if(msg){msg.style.color='#81c784';msg.textContent='✅ Settings saved';setTimeout(()=>msg.textContent='',2000)}
+}
+
+function clearAllBookings(){
+  if(!confirm('Delete ALL bookings? This cannot be undone.'))return;
+  BOOKINGS=[];saveBookings();renderOwner();
+}
+
+function clearAllDashboardData(){
+  if(!confirm('Reset the ENTIRE dashboard (bookings, gallery, promo, team, codes, site edits)? This cannot be undone.'))return;
+  ['ph_bookings_dummy'].forEach(()=>{}); // no-op placeholder
+  sessionStorage.removeItem('ph_bookings');
+  ['ph_promo','ph_gallery','ph_site_data','ph_team','ph_verify_codes','ph_client_notes','ph_settings'].forEach(k=>localStorage.removeItem(k));
+  location.reload();
+}
+
 
 // ══════════════════════════════════════════
 // ── PROMO PANEL
