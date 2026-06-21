@@ -161,17 +161,26 @@
     .owner-modal{display:none;position:fixed;inset:0;z-index:400;background:rgba(20,10,15,0.92);backdrop-filter:blur(8px);overflow-y:auto}
     .owner-modal.open{display:block}
     .owner-modal-inner{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
-    .owner-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-top:1rem}
-    .owner-header h2{font-family:'Playfair Display',serif;color:white;font-size:1.8rem}
-    .owner-close{background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;transition:background 0.2s}
+    .owner-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;padding-top:1rem}
+    .owner-header-text h2{font-family:'Playfair Display',serif;color:white;font-size:1.6rem;line-height:1.2}
+    .owner-header-text span{display:block;font-size:0.72rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.08em;margin-top:0.2rem}
+    .owner-close{background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;transition:background 0.2s;flex-shrink:0}
     .owner-close:hover{background:var(--pink)}
-    /* tabs */
-    .owner-tabs{display:flex;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
-    .owner-tab{background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.6);padding:0.6rem 1.25rem;border-radius:50px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:0.85rem;font-weight:600;transition:all 0.2s}
-    .owner-tab.active{background:linear-gradient(135deg,var(--pink),var(--pink-deep));color:white}
-    .owner-tab:hover:not(.active){background:rgba(255,255,255,0.14);color:white}
+    /* organized grouped nav */
+    .owner-nav{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:0.85rem;margin-bottom:1.5rem}
+    .owner-nav-group{margin-bottom:0.65rem}
+    .owner-nav-group:last-child{margin-bottom:0}
+    .owner-nav-label{display:block;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);margin:0 0 0.4rem 0.35rem}
+    .owner-nav-row{display:flex;gap:0.4rem;flex-wrap:wrap}
+    .owner-tabs{display:contents}
+    .owner-tab{background:rgba(255,255,255,0.07);border:1px solid transparent;color:rgba(255,255,255,0.65);padding:0.5rem 1rem;border-radius:10px;cursor:pointer;font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:600;transition:all 0.2s;white-space:nowrap}
+    .owner-tab.active{background:linear-gradient(135deg,var(--pink),var(--pink-deep));color:white;box-shadow:0 4px 14px rgba(232,88,138,0.35)}
+    .owner-tab:hover:not(.active){background:rgba(255,255,255,0.13);border-color:rgba(255,255,255,0.15);color:white}
     .owner-panel{display:none}
     .owner-panel.active{display:block}
+    .panel-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;padding-bottom:0.85rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+    .panel-heading h3{font-family:'Playfair Display',serif;color:white;font-size:1.15rem}
+    .panel-heading p{color:rgba(255,255,255,0.45);font-size:0.78rem;margin-top:0.2rem}
     /* booking list */
     .booking-list{display:flex;flex-direction:column;gap:0.75rem}
     .booking-item{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:1.25rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
@@ -208,11 +217,6 @@
     .quick-card .qi{font-size:1.8rem;margin-bottom:0.5rem}
     .quick-card h4{color:white;font-size:0.85rem;font-weight:700;margin-bottom:0.25rem}
     .quick-card p{color:rgba(255,255,255,0.45);font-size:0.75rem;line-height:1.5}
-    /* stats in owner */
-    .owner-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0.75rem;margin-bottom:1.5rem}
-    .owner-stat{background:rgba(255,255,255,0.06);border-radius:14px;padding:1.25rem;text-align:center}
-    .owner-stat .on{font-family:'Playfair Display',serif;font-size:2rem;color:var(--pink-light);display:block}
-    .owner-stat .ol{font-size:0.72rem;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.06em}
     /* reminder banner */
     .reminder-box{background:rgba(245,208,96,0.1);border:1px solid rgba(245,208,96,0.3);border-radius:14px;padding:1.25rem;margin-bottom:1rem}
     .reminder-box h4{color:var(--gold);font-size:0.85rem;font-weight:700;margin-bottom:0.5rem}
@@ -757,25 +761,52 @@
 <div class="owner-modal" id="ownerModal">
   <div class="owner-modal-inner">
     <div class="owner-header">
-      <h2>👑 Owner Dashboard</h2>
+      <div class="owner-header-text">
+        <h2>👑 Owner Dashboard</h2>
+        <span>Princess Housekeeping · Admin</span>
+      </div>
       <button class="owner-close" onclick="closeOwner()">✕</button>
     </div>
-    <div class="owner-stats" id="ownerStats"></div>
-    <div class="owner-tabs">
-      <button class="owner-tab active" onclick="switchTab('overview')">🏠 Overview</button>
-      <button class="owner-tab" onclick="switchTab('upcoming')">📅 Bookings</button>
-      <button class="owner-tab" onclick="switchTab('calendar')">🗓 Calendar</button>
-      <button class="owner-tab" onclick="switchTab('reminders')">🔔 Reminders</button>
-      <button class="owner-tab" onclick="switchTab('clients')">👥 Clients</button>
-      <button class="owner-tab" onclick="switchTab('promo')">📢 Promo</button>
-      <button class="owner-tab" onclick="switchTab('gallery')">📸 Gallery</button>
-      <button class="owner-tab" onclick="switchTab('edit')">✏️ Edit Site</button>
-      <button class="owner-tab" onclick="switchTab('invoice')">💰 Invoice</button>
-      <button class="owner-tab" onclick="switchTab('verify')">🔐 Verification</button>
-      <button class="owner-tab" onclick="switchTab('team')">🧑‍🤝‍🧑 Team</button>
-      <button class="owner-tab" onclick="switchTab('settings')">⚙️ Settings</button>
-      <button class="owner-tab" onclick="switchTab('links')">🔗 Links</button>
-    </div>
+    <nav class="owner-nav">
+      <div class="owner-nav-group">
+        <span class="owner-nav-label">Home</span>
+        <div class="owner-nav-row">
+          <button class="owner-tab active" onclick="switchTab('overview')">🏠 Overview</button>
+        </div>
+      </div>
+      <div class="owner-nav-group">
+        <span class="owner-nav-label">Bookings</span>
+        <div class="owner-nav-row">
+          <button class="owner-tab" onclick="switchTab('upcoming')">📅 Bookings</button>
+          <button class="owner-tab" onclick="switchTab('calendar')">🗓 Calendar</button>
+          <button class="owner-tab" onclick="switchTab('reminders')">🔔 Reminders</button>
+        </div>
+      </div>
+      <div class="owner-nav-group">
+        <span class="owner-nav-label">Clients &amp; Marketing</span>
+        <div class="owner-nav-row">
+          <button class="owner-tab" onclick="switchTab('clients')">👥 Clients</button>
+          <button class="owner-tab" onclick="switchTab('promo')">📢 Promo</button>
+          <button class="owner-tab" onclick="switchTab('gallery')">📸 Gallery</button>
+        </div>
+      </div>
+      <div class="owner-nav-group">
+        <span class="owner-nav-label">Business Tools</span>
+        <div class="owner-nav-row">
+          <button class="owner-tab" onclick="switchTab('edit')">✏️ Edit Site</button>
+          <button class="owner-tab" onclick="switchTab('invoice')">💰 Invoice</button>
+          <button class="owner-tab" onclick="switchTab('links')">🔗 Links</button>
+        </div>
+      </div>
+      <div class="owner-nav-group">
+        <span class="owner-nav-label">Admin</span>
+        <div class="owner-nav-row">
+          <button class="owner-tab" onclick="switchTab('verify')">🔐 Verification</button>
+          <button class="owner-tab" onclick="switchTab('team')">🧑‍🤝‍🧑 Team</button>
+          <button class="owner-tab" onclick="switchTab('settings')">⚙️ Settings</button>
+        </div>
+      </div>
+    </nav>
     <div class="owner-panel active" id="panel-overview"></div>
     <div class="owner-panel" id="panel-upcoming"></div>
     <div class="owner-panel" id="panel-all"></div>
@@ -1198,6 +1229,14 @@ for(let i=0;i<18;i++){const s=document.createElement('div');s.className='sp';s.s
 // ── NAV
 window.addEventListener('scroll',()=>document.getElementById('mainNav').classList.toggle('scrolled',scrollY>50));
 function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open')}
+let mobileMenuScrollY=window.scrollY;
+window.addEventListener('scroll',function(){
+  const menu=document.getElementById('mobileMenu');
+  if(menu&&menu.classList.contains('open')&&Math.abs(window.scrollY-mobileMenuScrollY)>5){
+    menu.classList.remove('open');
+  }
+  mobileMenuScrollY=window.scrollY;
+},{passive:true});
 
 // ── PRIVACY
 function openPrivacy(){document.getElementById('privacyModal').classList.add('open')}
@@ -1417,7 +1456,6 @@ function changePassword(){
 function closeOwner(){document.getElementById('ownerModal').classList.remove('open');if(history.pushState)history.pushState('','',window.location.pathname)}
 
 function renderOwner(){
-  renderOwnerStats();
   renderOverviewPanel();
   renderBookingPanel('panel-upcoming',BOOKINGS.filter(b=>b.status!=='cancelled').sort((a,b)=>a.created>b.created?1:-1).slice(0,10));
   renderBookingPanel('panel-all',BOOKINGS);
@@ -1431,19 +1469,6 @@ function renderOwner(){
   renderVerifyPanel();
   renderTeamPanel();
   renderSettingsPanel();
-}
-
-function renderOwnerStats(){
-  const total=BOOKINGS.length;
-  const pending=BOOKINGS.filter(b=>b.status==='pending').length;
-  const confirmed=BOOKINGS.filter(b=>b.status==='confirmed').length;
-  const cancelled=BOOKINGS.filter(b=>b.status==='cancelled').length;
-  document.getElementById('ownerStats').innerHTML=`
-    <div class="owner-stat"><span class="on">${total}</span><span class="ol">Total bookings</span></div>
-    <div class="owner-stat"><span class="on" style="color:var(--gold)">${pending}</span><span class="ol">Pending</span></div>
-    <div class="owner-stat"><span class="on" style="color:#81c784">${confirmed}</span><span class="ol">Confirmed</span></div>
-    <div class="owner-stat"><span class="on" style="color:#ef9a9a">${cancelled}</span><span class="ol">Cancelled</span></div>
-  `;
 }
 
 function renderBookingPanel(panelId,list){
@@ -1531,7 +1556,9 @@ function renderOverviewPanel(){
   const recent=BOOKINGS.slice().sort((a,b)=>b.created>a.created?1:-1).slice(0,5);
   const userLabel = currentOwnerUser ? `👤 Logged in as <strong>${currentOwnerUser.name}</strong> (team member)` : `👑 Logged in as <strong>Owner</strong> (full access)`;
   p.innerHTML=`
-    <p class="owner-badge-user">${userLabel}</p>
+    <div class="panel-heading">
+      <div><h3>Overview</h3><p>${userLabel}</p></div>
+    </div>
     <div class="ov-grid">
       <div class="ov-card"><span class="on">${total}</span><span class="ol">Bookings</span></div>
       <div class="ov-card"><span class="on" style="color:var(--gold)">${pending}</span><span class="ol">Pending</span></div>
@@ -1735,7 +1762,8 @@ function removeTeamMember(i){
 function applyTeamPermissions(){
   const allTabs=['overview','upcoming','calendar','reminders','clients','promo','gallery','edit','invoice','verify','team','settings','links'];
   document.querySelectorAll('.owner-tab').forEach(btn=>btn.style.display='');
-  if(!currentOwnerUser)return; // owner sees everything
+  document.querySelectorAll('.owner-nav-group').forEach(g=>g.style.display='');
+  if(!currentOwnerUser){return} // owner sees everything
   const allowed=new Set(['overview',...(currentOwnerUser.permissions||[])]);
   document.querySelectorAll('.owner-tab').forEach(btn=>{
     const onclick=btn.getAttribute('onclick')||'';
@@ -1744,6 +1772,10 @@ function applyTeamPermissions(){
     if(['team','settings','links'].includes(tab) || (tab && !allowed.has(tab))){
       btn.style.display='none';
     }
+  });
+  document.querySelectorAll('.owner-nav-group').forEach(g=>{
+    const visibleTabs=g.querySelectorAll('.owner-tab:not([style*="display: none"])');
+    if(visibleTabs.length===0)g.style.display='none';
   });
 }
 
