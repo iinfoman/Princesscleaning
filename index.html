@@ -167,7 +167,7 @@
     .owner-close{background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:1.2rem;display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif;transition:background 0.2s;flex-shrink:0}
     .owner-close:hover{background:var(--pink)}
     /* organized grouped nav */
-    .owner-nav{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:0.85rem;margin-bottom:1.5rem}
+    .owner-nav{position:static;display:block;z-index:auto;width:auto;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:0.85rem;margin-bottom:1.5rem}
     .owner-nav-group{margin-bottom:0.65rem}
     .owner-nav-group:last-child{margin-bottom:0}
     .owner-nav-label{display:block;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);margin:0 0 0.4rem 0.35rem}
@@ -767,7 +767,7 @@
       </div>
       <button class="owner-close" onclick="closeOwner()">✕</button>
     </div>
-    <nav class="owner-nav">
+    <div class="owner-nav">
       <div class="owner-nav-group">
         <span class="owner-nav-label">Home</span>
         <div class="owner-nav-row">
@@ -806,7 +806,7 @@
           <button class="owner-tab" onclick="switchTab('settings')">⚙️ Settings</button>
         </div>
       </div>
-    </nav>
+    </div>
     <div class="owner-panel active" id="panel-overview"></div>
     <div class="owner-panel" id="panel-upcoming"></div>
     <div class="owner-panel" id="panel-all"></div>
