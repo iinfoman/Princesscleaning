@@ -691,6 +691,47 @@
     .switch input:checked+.slider:before{transform:translateX(20px)}
     .owner-badge-user{font-size:0.72rem;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.06);padding:0.3rem 0.75rem;border-radius:100px;display:inline-block;margin-bottom:1rem}
 </style>
+
+<!-- Firebase SDK (CDN module) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC-qqLC4P6YMKQZXtW6075H-3ZqyWIeZIk",
+    authDomain: "princesshousekeeping-b2535.firebaseapp.com",
+    projectId: "princesshousekeeping-b2535",
+    storageBucket: "princesshousekeeping-b2535.firebasestorage.app",
+    messagingSenderId: "659454064782",
+    appId: "1:659454064782:web:4dcce12dbe786638feb1df"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // Expose to global scope so regular scripts can use Firebase
+  window._db = db;
+  window._fbCollection = (name) => collection(db, name);
+  window._fbAddDoc = addDoc;
+  window._fbDoc = (col, id) => doc(db, col, id);
+  window._fbUpdateDoc = updateDoc;
+  window._firebaseReady = false;
+
+  // Real-time listener — keeps BOOKINGS synced from Firestore
+  const q = query(collection(db, 'bookings'), orderBy('created', 'desc'));
+  onSnapshot(q, (snapshot) => {
+    window.BOOKINGS = snapshot.docs.map(d => ({ ...d.data(), _docId: d.id }));
+    window._firebaseReady = true;
+    // Re-render dashboard if it's open
+    const modal = document.getElementById('ownerModal');
+    if (modal && modal.classList.contains('open')) {
+      if (typeof renderOwner === 'function') renderOwner();
+    }
+  }, (err) => {
+    console.error('[Firebase] Listener error:', err.message);
+    window._firebaseReady = true; // still allow dashboard to open
+  });
+</script>
 </head>
 <body>
 
@@ -1215,9 +1256,11 @@
 </footer>
 
 <script>
-// ── BOOKINGS STORE (persists in session)
-let BOOKINGS = JSON.parse(sessionStorage.getItem('ph_bookings')||'[]');
-function saveBookings(){sessionStorage.setItem('ph_bookings',JSON.stringify(BOOKINGS))}
+// ── BOOKINGS STORE (Firebase Firestore — real-time cloud)
+// BOOKINGS array is populated by the Firebase onSnapshot listener above.
+// It starts empty and fills automatically once Firebase connects.
+window.BOOKINGS = window.BOOKINGS || [];
+function saveBookings(){ /* no-op — Firebase listener keeps BOOKINGS in sync */ }
 
 // ── SPARKLES
 const sb=document.getElementById('sparkles');
@@ -1351,6 +1394,13 @@ function submitBooking(){
     created:new Date().toISOString()
   };
   BOOKINGS.push(booking);saveBookings();
+
+  // Save to Firebase Firestore (permanent cloud storage)
+  if (window._db && window._fbAddDoc && window._fbCollection) {
+    window._fbAddDoc(window._fbCollection('bookings'), booking)
+      .then(() => console.log('[Firebase] Booking saved:', booking.id))
+      .catch(e => console.error('[Firebase] Save failed:', e.message));
+  }
 
   document.getElementById('bookFormWrap').style.display='none';
   document.getElementById('successWrap').style.display='block';
@@ -1490,9 +1540,20 @@ function renderBookingPanel(panelId,list){
     </div>`).join('')}</div>`;
 }
 
-function updateBooking(id,status){
-  const bk=BOOKINGS.find(b=>b.id===id);
-  if(bk){bk.status=status;saveBookings();renderOwner()}
+function updateBooking(id, status){
+  // Update local array immediately for responsive UI
+  const bk = BOOKINGS.find(b => b.id === id);
+  if (bk) { bk.status = status; renderOwner(); }
+
+  // Persist to Firestore using the Firestore document ID
+  if (window._db && window._fbUpdateDoc && window._fbDoc) {
+    const target = BOOKINGS.find(b => b.id === id);
+    if (target && target._docId) {
+      window._fbUpdateDoc(window._fbDoc('bookings', target._docId), { status })
+        .then(() => console.log('[Firebase] Status updated:', id, status))
+        .catch(e => console.error('[Firebase] Update failed:', e.message));
+    }
+  }
 }
 
 function waClient(phone,name,date,time){
@@ -1830,14 +1891,22 @@ function saveSettings(){
 }
 
 function clearAllBookings(){
-  if(!confirm('Delete ALL bookings? This cannot be undone.'))return;
-  BOOKINGS=[];saveBookings();renderOwner();
+  if(!confirm('Delete ALL bookings from the cloud database? This cannot be undone.'))return;
+  if(window._db && window._fbCollection && window._fbDoc && window._fbUpdateDoc){
+    // Mark all as cancelled in Firestore (soft delete keeps history)
+    BOOKINGS.forEach(b=>{
+      if(b._docId){
+        window._fbUpdateDoc(window._fbDoc('bookings',b._docId),{status:'cancelled'})
+          .catch(e=>console.error('[Firebase] Clear error:',e.message));
+      }
+    });
+  }
+  window.BOOKINGS=[];
+  renderOwner();
 }
 
 function clearAllDashboardData(){
-  if(!confirm('Reset the ENTIRE dashboard (bookings, gallery, promo, team, codes, site edits)? This cannot be undone.'))return;
-  ['ph_bookings_dummy'].forEach(()=>{}); // no-op placeholder
-  sessionStorage.removeItem('ph_bookings');
+  if(!confirm('Reset the ENTIRE dashboard (gallery, promo, team, codes, site edits)? Bookings in the cloud are NOT deleted. This cannot be undone.'))return;
   ['ph_promo','ph_gallery','ph_site_data','ph_team','ph_verify_codes','ph_client_notes','ph_settings'].forEach(k=>localStorage.removeItem(k));
   location.reload();
 }
