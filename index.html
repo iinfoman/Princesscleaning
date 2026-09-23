@@ -1369,6 +1369,69 @@ function confirmDateTime(){
 }
 
 // ── SUBMIT BOOKING
+// ---------------------------------------------------------------------------
+// leadcapture-system integration
+//
+// Maps this form's fields onto the lead-capture Edge Function so every
+// booking also lands on the owner's kanban dashboard (status, quote amount,
+// follow-up date, notes) — something this page has no equivalent of on its
+// own. Purely additive: it runs alongside the existing Firebase save and
+// WhatsApp-open above, never in place of them, and a failure here is caught
+// and logged, never shown to the customer or allowed to block their booking.
+const LEADCAPTURE_URL = 'https://bicpbpasvtvqisatiiqd.supabase.co';
+const LEADCAPTURE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpY3BicGFzdnR2cWlzYXRpaXFkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5NjU2NTksImV4cCI6MjA5OTU0MTY1OX0.jDqzgYkrnIEQWBiGzvKfASl39liw59d7aJfza93HqCE';
+const LEADCAPTURE_SLUG = 'princess-housekeeping';
+// Text must match the dashboard's leadcapture.services rows exactly, since
+// that is how the Edge Function resolves a service name to its service_id.
+const LEADCAPTURE_SERVICE_IDS = {
+  'Home Cleaning': 'e52f2fef-2ef5-4872-a31d-c678d4aaf6eb',
+  'BnB / Short-Term Rental': '5200975b-d314-4465-8b39-ca442cb26a87',
+  'After-Construction Clean': 'cde73828-b3ba-47f3-bbd3-c4b28869022f',
+  'Commercial Cleaning': '216f60c3-d5db-4445-bfee-c4b914a4f580',
+  'Flat / Apartment Clean': 'f1f34960-6671-484b-8431-0540af0a1dc9',
+  'Deep Clean': 'fd4b1e66-24de-43f4-9700-407a3e86d5e2',
+};
+
+function sendToLeadDashboard(booking){
+  // The booking form has no separate "notes" field for the requested slot,
+  // so fold the date/time and address into the description the dashboard
+  // shows on the lead card — otherwise that detail would only exist in the
+  // WhatsApp message, which the dashboard never sees.
+  const description = [
+    `Requested: ${booking.date} at ${booking.time}`,
+    booking.address ? `Address: ${booking.address}` : null,
+    booking.notes ? `Notes: ${booking.notes}` : null,
+  ].filter(Boolean).join('\n');
+
+  const payload = {
+    business_slug: LEADCAPTURE_SLUG,
+    customer_name: booking.name,
+    phone: booking.phone,
+    whatsapp: booking.phone, // this form only collects one number, used for both
+    email: booking.email || null,
+    service_id: LEADCAPTURE_SERVICE_IDS[booking.service] || null,
+    location: booking.city || null,
+    urgency: 'medium',
+    description: description || `${booking.service} requested for ${booking.date}.`,
+    preferred_contact: 'whatsapp',
+    photo_url: null,
+    company_website: '', // honeypot field the Edge Function expects empty
+  };
+
+  fetch(`${LEADCAPTURE_URL}/functions/v1/leadcapture-submit-lead`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: LEADCAPTURE_ANON_KEY,
+      Authorization: `Bearer ${LEADCAPTURE_ANON_KEY}`,
+    },
+    body: JSON.stringify(payload),
+  })
+    .then((r) => r.json())
+    .then((r) => console.log('[LeadDashboard] booking synced:', r.reference || r))
+    .catch((e) => console.error('[LeadDashboard] sync failed (booking still saved locally/Firebase):', e.message));
+}
+
 function submitBooking(){
   const name=document.getElementById('bookName').value.trim();
   const phone=document.getElementById('bookPhone').value.trim();
@@ -1401,6 +1464,12 @@ function submitBooking(){
       .then(() => console.log('[Firebase] Booking saved:', booking.id))
       .catch(e => console.error('[Firebase] Save failed:', e.message));
   }
+
+  // Also send to the lead dashboard (leadcapture-system), so bookings show up
+  // on a kanban board with status/quote/follow-up tracking instead of only
+  // existing as a WhatsApp message that depends on someone pressing send.
+  // Fire-and-forget: nothing above or below this depends on it succeeding.
+  sendToLeadDashboard(booking);
 
   document.getElementById('bookFormWrap').style.display='none';
   document.getElementById('successWrap').style.display='block';
